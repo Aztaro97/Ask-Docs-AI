@@ -1,0 +1,126 @@
+# Default values for ask-docs
+
+replicaCount: 2
+
+image:
+  repository: ask-docs-backend
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8000
+
+# Resource limits
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+
+# Environment variables
+env:
+  DEBUG: "false"
+  LOG_LEVEL: "INFO"
+  DOCS_PATH: "/app/docs"
+  INDEX_PATH: "/app/data/index"
+  CACHE_PATH: "/app/data/cache"
+  EMBEDDING_MODEL: "all-MiniLM-L6-v2"
+  RERANKER_MODEL: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+  LLM_PROVIDER: "ollama"
+  OLLAMA_HOST: "http://ollama:11434"
+  OLLAMA_MODEL: "llama3.2:3b"
+  TOP_K: "5"
+  MAX_TOKENS: "1024"
+  RATE_LIMIT_RPM: "60"
+
+# Secrets (reference external secret or create one)
+secrets:
+  # If using external secret
+  # existingSecret: "ask-docs-secrets"
+  # Or inline (not recommended for production)
+  create: false
+
+# Probes
+probes:
+  readiness:
+    enabled: true
+    path: /health/ready
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+  liveness:
+    enabled: true
+    path: /health/live
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+# Persistence for index and cache
+persistence:
+  enabled: true
+  size: 10Gi
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+
+# Ingress
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: ask-docs.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# Horizontal Pod Autoscaler
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Ollama sidecar (optional)
+ollama:
+  enabled: true
+  image:
+    repository: ollama/ollama
+    tag: latest
+  model: "llama3.2:3b"
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 4Gi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
+  persistence:
+    enabled: true
+    size: 20Gi

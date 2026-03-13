@@ -1,0 +1,90 @@
+Ask-Docs Configuration Guide
+============================
+
+Environment Variables
+---------------------
+
+Server Settings:
+  HOST              - Server host (default: 0.0.0.0)
+  PORT              - Server port (default: 8000)
+  DEBUG             - Debug mode (default: false)
+  LOG_LEVEL         - Logging level: DEBUG, INFO, WARNING, ERROR
+
+Paths:
+  DOCS_PATH         - Path to documents directory (default: ./docs)
+  INDEX_PATH        - Path for vector index storage (default: ./data/index)
+  CACHE_PATH        - Path for cache storage (default: ./data/cache)
+
+Document Processing:
+  MAX_FILE_SIZE_MB  - Maximum file size in MB (default: 50)
+  MAX_CHUNKS_PER_DOC- Maximum chunks per document (default: 1000)
+  CHUNK_SIZE        - Target chunk size in tokens (default: 512)
+  CHUNK_OVERLAP     - Overlap between chunks in tokens (default: 64)
+
+Embeddings:
+  EMBEDDING_MODEL   - Sentence transformer model (default: all-MiniLM-L6-v2)
+  EMBEDDING_BATCH_SIZE - Batch size for embedding (default: 32)
+
+Reranking:
+  RERANKER_MODEL    - Cross-encoder model (default: cross-encoder/ms-marco-MiniLM-L-6-v2)
+  RERANK_TOP_K      - Number of candidates for reranking (default: 10)
+
+Retrieval:
+  TOP_K             - Number of results to return (default: 5)
+  MIN_RELEVANCE_SCORE - Minimum relevance score threshold (default: 0.5)
+  MIN_CITATIONS     - Minimum citations required (default: 2)
+
+LLM Settings:
+  LLM_PROVIDER      - Provider: ollama or llama_cpp (default: ollama)
+  OLLAMA_HOST       - Ollama server URL (default: http://localhost:11434)
+  OLLAMA_MODEL      - Ollama model name (default: llama3.2:3b)
+  LLAMA_CPP_MODEL_PATH - Path to GGUF model file (for llama_cpp provider)
+  LLM_MAX_TOKENS    - Maximum tokens to generate (default: 1024)
+  LLM_TEMPERATURE   - Sampling temperature (default: 0.7)
+
+Rate Limiting:
+  RATE_LIMIT_RPM    - Requests per minute per IP (default: 60)
+
+Query Settings:
+  MAX_QUERY_LENGTH  - Maximum query length in characters (default: 500)
+
+
+Example .env File
+-----------------
+
+# Server
+DEBUG=true
+LOG_LEVEL=DEBUG
+PORT=8000
+
+# Paths
+DOCS_PATH=./docs
+INDEX_PATH=./data/index
+
+# LLM
+LLM_PROVIDER=ollama
+OLLAMA_HOST=http://localhost:11434
+OLLAMA_MODEL=llama3.2:3b
+
+# Retrieval
+TOP_K=5
+MIN_RELEVANCE_SCORE=0.5
+
+
+Tuning Recommendations
+----------------------
+
+For better quality answers:
+  - Increase TOP_K to retrieve more context
+  - Lower MIN_RELEVANCE_SCORE if abstaining too often
+  - Increase CHUNK_OVERLAP for better context continuity
+
+For faster responses:
+  - Use a smaller embedding model
+  - Reduce TOP_K
+  - Use a smaller/faster LLM model
+
+For larger documents:
+  - Increase MAX_FILE_SIZE_MB
+  - Increase MAX_CHUNKS_PER_DOC
+  - Consider using IndexIVFFlat for >50K chunks

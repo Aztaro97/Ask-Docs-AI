@@ -1,0 +1,125 @@
+# -----------------------------
+# Core VCS safety
+# -----------------------------
+.git/
+
+# -----------------------------
+# Secrets and environment files
+# -----------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# -----------------------------
+# Node / Frontend
+# -----------------------------
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+.yarn-cache/
+frontend/dist/
+frontend/.vite/
+
+# -----------------------------
+# Build / runtime artifacts
+# -----------------------------
+build/
+dist/
+out/
+.tmp/
+.cache/
+*.log
+*.pid
+
+# -----------------------------
+# Data, indexes, and caches (project-specific)
+# -----------------------------
+data/cache/
+data/index/
+
+# -----------------------------
+# OS / editor
+# -----------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# -----------------------------
+# Large binaries and archives
+# -----------------------------
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+*.gz
+*.bz2
+*.xz
+*.zst
+*.iso
+*.dmg
+*.pkg
+*.exe
+*.msi
+*.dll
+*.bin
+*.o
+*.a
+*.lib
+*.obj
+*.class
+*.jar
+*.war
+*.apk
+*.ipa
+*.pdf
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.mp3
+*.wav
+*.flac
+*.ogg
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.safetensors

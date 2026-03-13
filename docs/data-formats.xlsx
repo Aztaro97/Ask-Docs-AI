@@ -1,0 +1,34 @@
+This is a placeholder for an Excel file. In a real scenario, this would be a binary .xlsx file.
+
+To create a real sample Excel file, use Python:
+
+```python
+import openpyxl
+
+wb = openpyxl.Workbook()
+ws = wb.active
+ws.title = "Data Formats"
+
+# Headers
+ws['A1'] = 'Format'
+ws['B1'] = 'Extension'
+ws['C1'] = 'Parser'
+ws['D1'] = 'Notes'
+
+# Data
+data = [
+    ('Markdown', '.md', 'MarkdownParser', 'Preserves structure'),
+    ('Plain Text', '.txt', 'TextParser', 'UTF-8 encoding'),
+    ('HTML', '.html', 'HTMLParser', 'Removes scripts/styles'),
+    ('PDF', '.pdf', 'PDFParser', 'Uses PyMuPDF'),
+    ('Excel', '.xlsx', 'ExcelParser', 'All sheets extracted'),
+]
+
+for i, row in enumerate(data, 2):
+    ws[f'A{i}'] = row[0]
+    ws[f'B{i}'] = row[1]
+    ws[f'C{i}'] = row[2]
+    ws[f'D{i}'] = row[3]
+
+wb.save('data-formats.xlsx')
+```

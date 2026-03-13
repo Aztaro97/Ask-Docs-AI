@@ -1,0 +1,16 @@
+apiVersion: v2
+name: ask-docs
+description: RAG-based Q&A plugin with local LLM
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - rag
+  - llm
+  - documentation
+  - ai
+  - chatbot
+maintainers:
+  - name: Ask-Docs Team
+sources:
+  - https://github.com/example/ask-docs

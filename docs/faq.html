@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask-Docs FAQ</title>
+</head>
+<body>
+    <h1>Frequently Asked Questions</h1>
+
+    <h2>General Questions</h2>
+
+    <h3>What is Ask-Docs?</h3>
+    <p>Ask-Docs is a RAG (Retrieval-Augmented Generation) based Q&A system that allows you to ask questions about your documentation and receive accurate, cited answers from a local LLM.</p>
+
+    <h3>What file formats are supported?</h3>
+    <p>Ask-Docs supports the following file formats:</p>
+    <ul>
+        <li>Markdown (.md)</li>
+        <li>Plain text (.txt)</li>
+        <li>HTML (.html, .htm)</li>
+        <li>PDF (.pdf)</li>
+        <li>Excel (.xlsx, .xls)</li>
+    </ul>
+
+    <h3>Does it require an internet connection?</h3>
+    <p>No! Ask-Docs runs entirely locally. The LLM, embedding model, and all processing happens on your machine. No data is sent to external servers.</p>
+
+    <h2>Technical Questions</h2>
+
+    <h3>What LLM models are supported?</h3>
+    <p>Ask-Docs supports any model available through Ollama. The default is llama3.2:3b which provides a good balance of quality and speed on CPU. For better quality, try llama3.2:8b or mistral.</p>
+
+    <h3>How much memory is required?</h3>
+    <p>Memory requirements depend on the model:</p>
+    <ul>
+        <li>llama3.2:3b - ~4GB RAM</li>
+        <li>llama3.2:8b - ~8GB RAM</li>
+        <li>Embedding model - ~500MB RAM</li>
+        <li>Vector index - depends on document count</li>
+    </ul>
+
+    <h3>Can I use GPU acceleration?</h3>
+    <p>Yes! If you have an NVIDIA GPU with CUDA support, Ollama will automatically use it. For Docker, uncomment the GPU configuration in docker-compose.yml.</p>
+
+    <h3>How do I update the indexed documents?</h3>
+    <p>Simply run the indexing endpoint again with force_reindex set to true. This will clear the existing index and rebuild it from scratch.</p>
+
+    <h2>Troubleshooting</h2>
+
+    <h3>Why is the response slow?</h3>
+    <p>On CPU, LLM inference takes time. The default model generates about 2-3 tokens per second on CPU. For faster responses, consider using a smaller model or GPU acceleration.</p>
+
+    <h3>Why does it say "I don't have enough information"?</h3>
+    <p>This happens when the system cannot find relevant information in your documents (abstention). Try:</p>
+    <ul>
+        <li>Rephrasing your question</li>
+        <li>Making sure the topic is covered in your documents</li>
+        <li>Lowering the MIN_RELEVANCE_SCORE setting</li>
+    </ul>
+
+    <h3>The citations don't seem relevant. What can I do?</h3>
+    <p>Try adjusting the chunking parameters. Smaller chunks (256-512 tokens) often work better for precise retrieval. Also ensure your documents have clear headings and structure.</p>
+
+</body>
+</html>
