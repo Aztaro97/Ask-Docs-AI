@@ -3,10 +3,44 @@
 Ask‑Docs is a small end‑to‑end RAG stack:
 - **Backend** (`backend/`): FastAPI + FAISS + sentence‑transformers, talking to a **local LLM via Ollama**
 - **Frontend** (`frontend/`): React widget that streams answers token‑by‑token
-- **Helm chart** (`helm/ask-docs/`): optional Kubernetes deployment
+- **Helm chart** (`deploy/helm/ask-docs/`): optional Kubernetes deployment
 - **Docker Compose** (`docker-compose.yml`): one‑command local stack
 
 Below is a concrete, copy‑pasteable local setup guide.
+
+---
+
+### Architecture
+
+```mermaid
+graph TB
+    subgraph FE["Frontend (React)"]
+        W[AskDocsWidget] --> SSE[useSSEStream]
+        SSE --> C[Citations]
+        SSE --> TB[TokenBudget]
+    end
+
+    subgraph BE["Backend (FastAPI)"]
+        IX[POST /index] --> CH[Chunker] --> EM[Embeddings] --> VS[FAISS]
+        QY[POST /query/stream] --> RET[Retriever] --> RR[Reranker]
+        RR --> RAG[RAG Pipeline] --> LLM[Ollama/llama-cpp]
+        RAG --> STR[SSE Streamer]
+
+        subgraph Safety
+            VAL[Validation] --> RED[PII Redaction]
+            RED --> ABS[Abstention Check]
+        end
+    end
+
+    FE <-->|"SSE (tokens, citations)"| BE
+    D[(docs/)] --> IX
+    VS <--> RET
+    QY --> Safety --> RAG
+```
+
+**Data Flow:**
+1. **Indexing**: Documents → Chunking → Embeddings → FAISS Vector Store
+2. **Query**: Question → Validation → Retrieval → Reranking → LLM Generation → SSE Streaming
 
 ---
 
@@ -197,12 +231,12 @@ make docker-build
 
 ### 7. Helm chart – Kubernetes deployment (optional)
 
-For a K8s deployment, there is a Helm chart in `helm/ask-docs/`.
+For a K8s deployment, there is a Helm chart in `deploy/helm/ask-docs/`.
 
 Basic usage (assuming you have a cluster and `helm` configured):
 
 ```bash
-cd helm/ask-docs
+cd deploy/helm/ask-docs
 
 # Inspect/override values as needed
 cat values.yaml
@@ -234,6 +268,7 @@ From the repo root:
   - `make index` – index docs from `./docs`
   - `make query` – run a sample query
   - `make sample` – `index` + `query`
+  - `./scripts/run_sample.sh` – one-liner to index and query with output
 - **Docker**
   - `make docker-up` / `make docker-down` / `make docker-build`
 - **Quality**
