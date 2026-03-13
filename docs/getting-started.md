@@ -32,7 +32,7 @@ Ask-Docs is a RAG-based Q&A system that lets you ask questions about your docume
    make docker-up
    ```
 
-4. Open http://localhost:3000 in your browser.
+4. Open http://localhost:5173 in your browser.
 
 ## Using the Widget
 

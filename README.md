@@ -10,6 +10,14 @@ Below is a concrete, copy‑pasteable local setup guide.
 
 ---
 
+### Demo Video
+
+[![Ask-Docs Demo](https://img.youtube.com/vi/1nQN9yfOONQ/maxresdefault.jpg)](https://youtu.be/1nQN9yfOONQ)
+
+> Click the image above to watch the full demo on YouTube
+
+---
+
 ### Architecture
 
 ```mermaid
@@ -194,7 +202,7 @@ What this does (see `docker-compose.yml` and `Makefile`):
 - Starts:
   - `ollama` on `http://localhost:11434`
   - `backend` on `http://localhost:8000`
-  - `frontend` on `http://localhost:3000`
+  - `frontend` on `http://localhost:5173`
 - Waits briefly, then runs:
 
   ```bash

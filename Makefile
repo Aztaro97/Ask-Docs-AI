@@ -61,7 +61,7 @@ docker-up:
 	@sleep 10
 	@echo "Pulling model..."
 	docker compose exec ollama ollama pull llama3.2:3b
-	@echo "Services started! Backend: http://localhost:8000, Frontend: http://localhost:3000"
+	@echo "Services started! Backend: http://localhost:8000, Frontend: http://localhost:5173"
 
 docker-down:
 	docker compose down

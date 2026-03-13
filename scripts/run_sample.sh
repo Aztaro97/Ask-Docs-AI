@@ -51,4 +51,4 @@ echo ""
 echo ""
 
 echo "=== Sample run complete ==="
-echo "Open http://localhost:5173 (dev) or http://localhost:3000 (docker) to use the widget"
+echo "Open http://localhost:5173 (dev) or http://localhost:5173 (docker) to use the widget"
