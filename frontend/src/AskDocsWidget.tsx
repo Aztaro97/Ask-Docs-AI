@@ -118,17 +118,11 @@ export function AskDocsWidget({
       setMessages((prev) => [...prev, placeholderMessage]);
 
       try {
-        console.log('[AskDocsWidget] Starting streamMessage for assistantId:', assistantId);
         const response = await streamMessage(question, {
           messageId: assistantId,
           onMessage: (partial) => {
-            console.log('[AskDocsWidget] onMessage callback:', {
-              content: partial.content,
-              contentLength: partial.content?.length,
-              citations: partial.citations?.length,
-            });
-            setMessages((prev) => {
-              const updated = prev.map((msg) =>
+            setMessages((prev) =>
+              prev.map((msg) =>
                 msg.id === assistantId
                   ? {
                       ...msg,
@@ -138,10 +132,8 @@ export function AskDocsWidget({
                       isStreaming: true,
                     }
                   : msg
-              );
-              console.log('[AskDocsWidget] Updated messages:', updated.map(m => ({ id: m.id, content: m.content?.substring(0, 50) })));
-              return updated;
-            });
+              )
+            );
           },
         });
 

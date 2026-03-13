@@ -69,21 +69,20 @@ export class SSEClient {
         const lines = buffer.split('\n');
         buffer = lines.pop() || '';
 
-        for (const line of lines) {
-          console.log('[SSEClient] Processing line:', JSON.stringify(line));
+        for (let line of lines) {
+          // Strip carriage return from Windows-style line endings
+          line = line.replace(/\r$/, '');
+
           if (line.startsWith('event:')) {
             currentEvent = line.slice(6).trim();
-            console.log('[SSEClient] Got event type:', currentEvent);
           } else if (line.startsWith('data:')) {
             const dataLine = line.slice(5).trimStart();
             // SSE allows multiple data lines; join with newline (spec).
             currentData = currentData ? `${currentData}\n${dataLine}` : dataLine;
-            console.log('[SSEClient] Got data:', dataLine);
           } else if (line === '') {
             // Empty line ends the event frame. Dispatch if we have data.
             if (currentData) {
               const eventName = currentEvent || 'message';
-              console.log('[SSEClient] Dispatching event:', eventName, 'data:', currentData);
               this.handleEvent(eventName, currentData, callbacks);
             }
             currentEvent = '';
@@ -101,13 +100,10 @@ export class SSEClient {
 
   private handleEvent(event: string, data: string, callbacks: SSECallbacks): void {
     try {
-      console.log('[SSEClient] handleEvent:', event, 'raw data:', data);
       const parsed = JSON.parse(data);
-      console.log('[SSEClient] handleEvent parsed:', event, parsed);
 
       switch (event) {
         case 'token':
-          console.log('[SSEClient] Calling onToken with:', parsed);
           callbacks.onToken(parsed as TokenData);
           break;
         case 'citation':
