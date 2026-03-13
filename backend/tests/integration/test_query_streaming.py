@@ -72,13 +72,14 @@ class TestQueryEndpoint:
         assert response.status_code == 422 or response.status_code == 400
 
     def test_query_too_long(self, client):
-        """Query exceeding max length returns 400."""
+        """Query exceeding max length returns 422 (Pydantic validation)."""
         long_query = "a" * 501
         response = client.post(
             "/query",
             json={"question": long_query, "stream": False},
         )
-        assert response.status_code == 400
+        # Pydantic validation returns 422 Unprocessable Entity
+        assert response.status_code == 422
 
 
 class TestStreamingQuery:

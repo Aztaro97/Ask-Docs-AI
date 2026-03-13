@@ -46,7 +46,7 @@ class Settings(BaseSettings):
 
     # Retrieval
     top_k: int = 5
-    min_relevance_score: float = 0.5
+    min_relevance_score: float = 0.2  # Lowered to allow more matches
     min_citations: int = 1
 
     # LLM

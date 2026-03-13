@@ -66,18 +66,24 @@ export function useSSEStream({ baseUrl, onError }: UseSSEStreamOptions): UseSSES
           options?.onMessage?.(streamingMessage);
         };
 
+        console.log('[useSSEStream] Starting stream for question:', question);
+
         clientRef.current.stream(question, options?.topK ?? 5, {
           onToken: (data) => {
+            console.log('[useSSEStream] onToken received:', data);
             contentRef.current += data.content;
+            console.log('[useSSEStream] contentRef now:', contentRef.current);
             updateMessage();
           },
 
           onCitation: (data) => {
+            console.log('[useSSEStream] onCitation received:', data);
             citationsRef.current = data.citations;
             updateMessage();
           },
 
-          onDone: (_data) => {
+          onDone: (data) => {
+            console.log('[useSSEStream] onDone received:', data);
             setIsStreaming(false);
             updateMessage();
             streamingMessage.isStreaming = false;
@@ -85,6 +91,7 @@ export function useSSEStream({ baseUrl, onError }: UseSSEStreamOptions): UseSSES
           },
 
           onError: (data) => {
+            console.log('[useSSEStream] onError received:', data);
             setIsStreaming(false);
             const errorInfo: ErrorInfo = {
               type: data.type,

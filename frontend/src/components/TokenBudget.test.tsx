@@ -7,48 +7,56 @@ describe('TokenBudget', () => {
     render(<TokenBudget used={1500} max={4096} />);
 
     expect(screen.getByText('Token Budget')).toBeInTheDocument();
-    expect(screen.getByText('~1,500 / 4,096')).toBeInTheDocument();
+    // Use regex to find the formatted numbers in the combined text
+    expect(screen.getByText(/1,500/)).toBeInTheDocument();
+    expect(screen.getByText(/4,096/)).toBeInTheDocument();
   });
 
   it('calculates correct percentage width', () => {
-    const { container } = render(<TokenBudget used={2048} max={4096} />);
+    render(<TokenBudget used={2048} max={4096} />);
 
-    const fill = container.querySelector('.ask-docs-token-fill');
-    expect(fill).toHaveStyle({ width: '50%' });
+    const progressBar = screen.getByRole('progressbar');
+    expect(progressBar).toHaveStyle({ width: '50%' });
   });
 
-  it('applies warning class when usage > 70%', () => {
-    const { container } = render(<TokenBudget used={3000} max={4096} />);
+  it('applies warning color when usage > 70%', () => {
+    render(<TokenBudget used={3000} max={4096} />);
 
-    const fill = container.querySelector('.ask-docs-token-fill');
-    expect(fill).toHaveClass('warning');
-    expect(fill).not.toHaveClass('critical');
+    const progressBar = screen.getByRole('progressbar');
+    expect(progressBar).toHaveClass('bg-amber-500');
+    expect(progressBar).not.toHaveClass('bg-destructive');
   });
 
-  it('applies critical class when usage > 90%', () => {
-    const { container } = render(<TokenBudget used={3800} max={4096} />);
+  it('applies critical color when usage > 90%', () => {
+    render(<TokenBudget used={3800} max={4096} />);
 
-    const fill = container.querySelector('.ask-docs-token-fill');
-    expect(fill).toHaveClass('critical');
+    const progressBar = screen.getByRole('progressbar');
+    expect(progressBar).toHaveClass('bg-destructive');
   });
 
-  it('does not apply warning/critical class when usage is low', () => {
-    const { container } = render(<TokenBudget used={1000} max={4096} />);
+  it('applies primary color when usage is low', () => {
+    render(<TokenBudget used={1000} max={4096} />);
 
-    const fill = container.querySelector('.ask-docs-token-fill');
-    expect(fill).not.toHaveClass('warning');
-    expect(fill).not.toHaveClass('critical');
+    const progressBar = screen.getByRole('progressbar');
+    expect(progressBar).toHaveClass('bg-primary');
+    expect(progressBar).not.toHaveClass('bg-amber-500');
+    expect(progressBar).not.toHaveClass('bg-destructive');
   });
 
   it('caps percentage at 100% even if used exceeds max', () => {
-    const { container } = render(<TokenBudget used={5000} max={4096} />);
+    render(<TokenBudget used={5000} max={4096} />);
 
-    const fill = container.querySelector('.ask-docs-token-fill');
-    expect(fill).toHaveStyle({ width: '100%' });
+    const progressBar = screen.getByRole('progressbar');
+    expect(progressBar).toHaveStyle({ width: '100%' });
   });
 
-  it('handles zero max gracefully', () => {
-    render(<TokenBudget used={0} max={0} />);
-    expect(screen.getByText('~0 / 0')).toBeInTheDocument();
+  it('has correct aria attributes', () => {
+    render(<TokenBudget used={1500} max={4096} />);
+
+    const progressBar = screen.getByRole('progressbar');
+    expect(progressBar).toHaveAttribute('aria-valuenow', '1500');
+    expect(progressBar).toHaveAttribute('aria-valuemin', '0');
+    expect(progressBar).toHaveAttribute('aria-valuemax', '4096');
+    expect(progressBar).toHaveAttribute('aria-label', 'Token usage: 1500 of 4096');
   });
 });

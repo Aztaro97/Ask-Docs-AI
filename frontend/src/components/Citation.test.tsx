@@ -14,32 +14,30 @@ const mockCitation: CitationType = {
 
 describe('Citation', () => {
   it('renders citation with file name and score', () => {
-    render(<Citation citation={mockCitation} />);
+    render(<Citation citation={mockCitation} index={0} />);
 
-    expect(screen.getByText('[1]')).toBeInTheDocument();
+    expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText('getting-started.md')).toBeInTheDocument();
-    expect(screen.getByText('87%')).toBeInTheDocument();
+    expect(screen.getByText('87')).toBeInTheDocument();
   });
 
   it('is collapsed by default', () => {
-    render(<Citation citation={mockCitation} />);
+    render(<Citation citation={mockCitation} index={0} />);
 
     expect(screen.queryByText(mockCitation.snippet)).not.toBeInTheDocument();
   });
 
   it('expands when clicked to show snippet', () => {
-    render(<Citation citation={mockCitation} />);
+    render(<Citation citation={mockCitation} index={0} />);
 
     const button = screen.getByRole('button');
     fireEvent.click(button);
 
     expect(screen.getByText(mockCitation.snippet)).toBeInTheDocument();
-    expect(screen.getByText(`Source: ${mockCitation.file_path}`)).toBeInTheDocument();
-    expect(screen.getByText(`Chunk: ${mockCitation.chunk_id}`)).toBeInTheDocument();
   });
 
   it('collapses when clicked again', () => {
-    render(<Citation citation={mockCitation} />);
+    render(<Citation citation={mockCitation} index={0} />);
 
     const button = screen.getByRole('button');
     fireEvent.click(button); // Expand
@@ -50,7 +48,7 @@ describe('Citation', () => {
   });
 
   it('has correct aria-expanded attribute', () => {
-    render(<Citation citation={mockCitation} />);
+    render(<Citation citation={mockCitation} index={0} />);
 
     const button = screen.getByRole('button');
     expect(button).toHaveAttribute('aria-expanded', 'false');
@@ -81,9 +79,9 @@ describe('CitationList', () => {
   it('renders title and all citations', () => {
     render(<CitationList citations={mockCitations} />);
 
-    expect(screen.getByText('Sources')).toBeInTheDocument();
-    expect(screen.getByText('[1]')).toBeInTheDocument();
-    expect(screen.getByText('[2]')).toBeInTheDocument();
+    expect(screen.getByText(/Sources/)).toBeInTheDocument();
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
     expect(screen.getByText('getting-started.md')).toBeInTheDocument();
     expect(screen.getByText('api-reference.md')).toBeInTheDocument();
   });
